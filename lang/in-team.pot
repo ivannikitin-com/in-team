@@ -1,0 +1,190 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: IN Team\n"
+"POT-Creation-Date: 2016-12-04 12:31+0300\n"
+"PO-Revision-Date: 2016-12-04 12:31+0300\n"
+"Last-Translator: Иван Никитин <info@ivannikitin.com>\n"
+"Language-Team: Иван Никитин <info@ivannikitin.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.11\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: in-team.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: classes/cpt_team.php:97
+msgid "Employees"
+msgstr ""
+
+#: classes/cpt_team.php:98
+msgid "Employee"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+#: classes/cpt_team.php:99
+msgid "IN Team"
+msgstr ""
+
+#: classes/cpt_team.php:100
+msgid "Parent Employee"
+msgstr ""
+
+#: classes/cpt_team.php:101
+msgid "All Employees"
+msgstr ""
+
+#: classes/cpt_team.php:102
+msgid "View Employee"
+msgstr ""
+
+#: classes/cpt_team.php:103
+msgid "New Employee"
+msgstr ""
+
+#: classes/cpt_team.php:104
+msgid "Add Employee"
+msgstr ""
+
+#: classes/cpt_team.php:105
+msgid "Edit Employee"
+msgstr ""
+
+#: classes/cpt_team.php:106
+msgid "Update Employee"
+msgstr ""
+
+#: classes/cpt_team.php:107
+msgid "Search Employee"
+msgstr ""
+
+#: classes/cpt_team.php:108 classes/cpt_team.php:162
+msgid "Not found"
+msgstr ""
+
+#: classes/cpt_team.php:109
+msgid "Not found in trash"
+msgstr ""
+
+#: classes/cpt_team.php:119
+msgid "Employee details"
+msgstr ""
+
+#: classes/cpt_team.php:148 classes/cpt_team.php:150
+msgid "Departments"
+msgstr ""
+
+#: classes/cpt_team.php:149
+msgid "Department"
+msgstr ""
+
+#: classes/cpt_team.php:151
+msgid "All departments"
+msgstr ""
+
+#: classes/cpt_team.php:152 classes/cpt_team.php:153
+msgid "Parent department"
+msgstr ""
+
+#: classes/cpt_team.php:154
+msgid "New department"
+msgstr ""
+
+#: classes/cpt_team.php:155
+msgid "Add department"
+msgstr ""
+
+#: classes/cpt_team.php:156
+msgid "Edit department"
+msgstr ""
+
+#: classes/cpt_team.php:157
+msgid "Update department"
+msgstr ""
+
+#: classes/cpt_team.php:158
+msgid "Separate departments by comma"
+msgstr ""
+
+#: classes/cpt_team.php:159
+msgid "Search department"
+msgstr ""
+
+#: classes/cpt_team.php:160
+msgid "Add or remove department"
+msgstr ""
+
+#: classes/cpt_team.php:161
+msgid "Most used departments"
+msgstr ""
+
+#: classes/settings.php:113 classes/settings.php:147
+msgid "IN Team Settings"
+msgstr ""
+
+#: classes/settings.php:114
+msgid "Settings"
+msgstr ""
+
+#: classes/settings.php:148
+msgid "This plugin creates \"Our Team\" section on site."
+msgstr ""
+
+#: classes/settings.php:149
+msgid "Error: The nonce is not valid!"
+msgstr ""
+
+#: classes/settings.php:155
+msgid "Team slug"
+msgstr ""
+
+#: classes/settings.php:158
+msgid "Specify the slug of the Team section. \""
+msgstr ""
+
+#: classes/settings.php:163
+msgid "Department slug"
+msgstr ""
+
+#: classes/settings.php:166
+msgid "Specify the slug of the Department taxomony. \""
+msgstr ""
+
+#: classes/settings.php:171
+msgid "Don't forget to reset the permalinks"
+msgstr ""
+
+#: classes/settings.php:172
+msgid "here"
+msgstr ""
+
+#: classes/settings.php:173
+msgid "for flushing Wordpress URL rewrite rules."
+msgstr ""
+
+#: classes/settings.php:174
+msgid "Just click on [Save] button on Permalinks options page"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://in-soft.pro/plugins/in-team/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "Our team directory"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Ivan Nikitin and partners"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://ivannikitin.com"
+msgstr ""
