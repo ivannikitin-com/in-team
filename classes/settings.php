@@ -155,7 +155,9 @@ class Settings
 		<label for="inteamSlug"><?php esc_html_e( 'Team slug', INTEAM ) ?></label>
 		<div class="inteam-input">
 			<input id="inteamSlug" name="inteamSlug" type="text" value="<?php echo esc_attr( $this->get( CPT_Team::SETTINGS_SLUG ) ) ?>" />
-			<p><?php esc_html_e( 'Specify the slug of the Team section. "' . CPT_Team::SETTINGS_SLUG_DEFAULT . '" is using by default if this parameter is empty.', INTEAM ) ?></p>
+			<p><?php esc_html_e( 'Specify the slug of the Team section. "', INTEAM ); 
+			echo CPT_Team::SETTINGS_SLUG_DEFAULT;
+			esc_html_e( '" is using by default if this parameter is empty.', INTEAM ) ?></p>
 		</div>
 	</div>
 	
@@ -163,7 +165,9 @@ class Settings
 		<label for="inteamDepartmentSlug"><?php esc_html_e( 'Department slug', INTEAM ) ?></label>
 		<div class="inteam-input">
 			<input id="inteamDepartmentSlug" name="inteamDepartmentSlug" type="text" value="<?php echo esc_attr( $this->get( CPT_Team::SETTINGS_SLUG_TAXONOMY_DEPARTMENT ) ) ?>" />
-			<p><?php esc_html_e( 'Specify the slug of the Department taxomony. "' . CPT_Team::SETTINGS_SLUG_TAXONOMY_DEPARTMENT_DEFAULT . '" is using by default if this parameter is empty.', INTEAM ) ?></p>
+			<p><?php esc_html_e( 'Specify the slug of the Department taxomony. "', INTEAM ); 
+			echo CPT_Team::SETTINGS_SLUG_TAXONOMY_DEPARTMENT_DEFAULT;
+			esc_html_e( '" is using by default if this parameter is empty.', INTEAM ) ?></p>
 		</div>
 	</div>
 	
