@@ -3,8 +3,8 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: IN Team\n"
-"POT-Creation-Date: 2016-12-04 12:47+0300\n"
-"PO-Revision-Date: 2016-12-04 12:47+0300\n"
+"POT-Creation-Date: 2016-12-04 12:53+0300\n"
+"PO-Revision-Date: 2016-12-04 12:52+0300\n"
 "Last-Translator: Иван Никитин <info@ivannikitin.com>\n"
 "Language-Team: Иван Никитин <info@ivannikitin.com>\n"
 "MIME-Version: 1.0\n"
@@ -148,27 +148,31 @@ msgstr ""
 msgid "Specify the slug of the Team section. \""
 msgstr ""
 
-#: classes/settings.php:163
+#: classes/settings.php:160 classes/settings.php:170
+msgid "\" is using by default if this parameter is empty."
+msgstr ""
+
+#: classes/settings.php:165
 msgid "Department slug"
 msgstr ""
 
-#: classes/settings.php:166
+#: classes/settings.php:168
 msgid "Specify the slug of the Department taxomony. \""
 msgstr ""
 
-#: classes/settings.php:171
+#: classes/settings.php:175
 msgid "Don't forget to reset the permalinks"
 msgstr ""
 
-#: classes/settings.php:172
+#: classes/settings.php:176
 msgid "here"
 msgstr ""
 
-#: classes/settings.php:173
+#: classes/settings.php:177
 msgid "for flushing Wordpress URL rewrite rules."
 msgstr ""
 
-#: classes/settings.php:174
+#: classes/settings.php:178
 msgid "Just click on [Save] button on Permalinks options page"
 msgstr ""
 

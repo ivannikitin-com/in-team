@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: IN Team\n"
-"POT-Creation-Date: 2016-12-04 12:47+0300\n"
-"PO-Revision-Date: 2016-12-04 12:47+0300\n"
+"POT-Creation-Date: 2016-12-04 12:53+0300\n"
+"PO-Revision-Date: 2016-12-04 12:53+0300\n"
 "Last-Translator: Иван Никитин <info@ivannikitin.com>\n"
 "Language-Team: Иван Никитин <info@ivannikitin.com>\n"
 "Language: ru_RU\n"
@@ -149,27 +149,31 @@ msgstr "Слаг \"Команда\""
 msgid "Specify the slug of the Team section. \""
 msgstr "Укажите слаг (часть URL) для раздела \"Команда\". \""
 
-#: classes/settings.php:163
+#: classes/settings.php:160 classes/settings.php:170
+msgid "\" is using by default if this parameter is empty."
+msgstr "\" используется по умолчанию, если этот параметр пустой."
+
+#: classes/settings.php:165
 msgid "Department slug"
 msgstr "Слаг \"Отдел\""
 
-#: classes/settings.php:166
+#: classes/settings.php:168
 msgid "Specify the slug of the Department taxomony. \""
 msgstr "Укажите слаг (часть URL) для раздела \"Отдел\". \""
 
-#: classes/settings.php:171
+#: classes/settings.php:175
 msgid "Don't forget to reset the permalinks"
 msgstr "Не забудьте сбросить настройки постоянных ссылок"
 
-#: classes/settings.php:172
+#: classes/settings.php:176
 msgid "here"
 msgstr "здесь"
 
-#: classes/settings.php:173
+#: classes/settings.php:177
 msgid "for flushing Wordpress URL rewrite rules."
 msgstr "для гарантированного изменения правил перезаписи URL в WordPress"
 
-#: classes/settings.php:174
+#: classes/settings.php:178
 msgid "Just click on [Save] button on Permalinks options page"
 msgstr "В разделе \"Постоянные ссылки\" просто нажмите кнопку [Сохранить]"
 
