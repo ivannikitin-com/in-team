@@ -96,7 +96,7 @@ class CPT_Team
 		$labels = array(
 			'name'                => __( 'Employees', INTEAM ),
 			'singular_name'       => __( 'Employee', INTEAM ),
-			'menu_name'           => __( 'IN Team', INTEAM ),
+			'menu_name'           => __( 'Our Team', INTEAM ),
 			'parent_item_colon'   => __( 'Parent Employee', INTEAM ),
 			'all_items'           => __( 'All Employees', INTEAM ),
 			'view_item'           => __( 'View Employee', INTEAM ),
