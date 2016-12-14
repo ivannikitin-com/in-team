@@ -43,6 +43,35 @@ class CPT_Team
 	 */
 	const SETTINGS_SLUG_TAXONOMY_DEPARTMENT_DEFAULT = 'department';	
 	
+	/**
+	 * Название среднего размера фотографий
+	 * @static
+	 */
+	const IMAGE_MEDIUM = 'in_team_medium';
+	
+	/**
+	 * Ширина среднего размера фотографий
+	 * @static
+	 */
+	const IMAGE_MEDIUM_WIDTH = 285;
+	
+	/**
+	 * Высота среднего размера фотографий
+	 * @static
+	 */
+	const IMAGE_MEDIUM_HEIGHT = 300;
+
+	/**
+	 * Параметр Ширина среднего размера фотографий
+	 * @static
+	 */
+	const SETTINGS_IMAGE_MEDIUM_WIDTH = 'in_team_medium_width';
+	
+	/**
+	 * Параметр Высота среднего размера фотографий
+	 * @static
+	 */
+	const SETTINGS_IMAGE_MEDIUM_HEIGHT = 'in_team_medium_height';	
 	
 /* ------------------------------------ Свойства -----------------------------------*/	
 	/**
@@ -85,6 +114,9 @@ class CPT_Team
 		// Регистрация типа и таксономии
 		$this->registerTaxonomyDepartment();
 		$this->registerCPT();
+		
+		// Регистрация размеров фотографий
+		$this->registerimageSizes();
 		
 	}
 	
@@ -179,5 +211,17 @@ class CPT_Team
 		);
 		register_taxonomy( self::TAXONOMY_DEPARTMENT, array( self::TYPE ), $args );		
 	}
+	
+	/**
+	 * Регистрация размеров для фотографий сотрудников 
+	 */	
+	protected function registerimageSizes()
+	{
+		// Средний размер
+		add_image_size( self::IMAGE_MEDIUM, 
+			$this->plugin->settings->get( self::SETTINGS_IMAGE_MEDIUM_WIDTH, 	self::IMAGE_MEDIUM_WIDTH ), 
+			$this->plugin->settings->get( self::SETTINGS_IMAGE_MEDIUM_HEIGHT, 	self::IMAGE_MEDIUM_HEIGHT ), 
+			true );
+	}		
 	
 }
