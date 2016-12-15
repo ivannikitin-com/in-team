@@ -71,7 +71,19 @@ class CPT_Team
 	 * Параметр Высота среднего размера фотографий
 	 * @static
 	 */
-	const SETTINGS_IMAGE_MEDIUM_HEIGHT = 'in_team_medium_height';	
+	const SETTINGS_IMAGE_MEDIUM_HEIGHT = 'in_team_medium_height';
+
+	/**
+	 * Сортировка вывода сотрудников
+	 * @static
+	 */
+	const ORDER_BY_DEFAULT = 'menu_order';
+
+	/**
+	 * Параметр Ширина среднего размера фотографий
+	 * @static
+	 */
+	const SETTINGS_ORDER_BY = 'order_by';	
 	
 /* ------------------------------------ Свойства -----------------------------------*/	
 	/**
@@ -117,6 +129,9 @@ class CPT_Team
 		
 		// Регистрация размеров фотографий
 		$this->registerimageSizes();
+		
+		// Хук на выборку данных
+		add_action( 'pre_get_posts', array( $this, 'setQueryParams' ) );
 		
 	}
 	
@@ -223,5 +238,19 @@ class CPT_Team
 			$this->plugin->settings->get( self::SETTINGS_IMAGE_MEDIUM_HEIGHT, 	self::IMAGE_MEDIUM_HEIGHT ), 
 			true );
 	}		
+	
+	/**
+	 * Установка параметров вывода данных
+	 * @param WP_Query $query	Объект который запрашивается
+	 */	
+	public function setQueryParams( $query )
+	{	
+		if ( $query->get('post_type') == self::TYPE && $query->is_main_query() )
+		{
+			$query->set( 'orderby', $this->plugin->settings->get( self::SETTINGS_ORDER_BY, self::ORDER_BY_DEFAULT ) );
+			$query->set( 'order', 'ASC' );
+			$query->set( 'posts_per_page', -1 );
+		}
+	}
 	
 }
