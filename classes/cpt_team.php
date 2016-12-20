@@ -72,6 +72,36 @@ class CPT_Team
 	 * @static
 	 */
 	const SETTINGS_IMAGE_MEDIUM_HEIGHT = 'in_team_medium_height';
+	
+	/**
+	 * Название большого размера фотографий
+	 * @static
+	 */
+	const IMAGE_LARGE = 'in_team_large';
+	
+	/**
+	 * Ширина большого размера фотографий
+	 * @static
+	 */
+	const IMAGE_LARGE_WIDTH = 500;
+	
+	/**
+	 * Высота большого размера фотографий
+	 * @static
+	 */
+	const IMAGE_LARGE_HEIGHT = 600;
+
+	/**
+	 * Параметр Ширина большого размера фотографий
+	 * @static
+	 */
+	const SETTINGS_IMAGE_LARGE_WIDTH = 'in_team_large_width';
+	
+	/**
+	 * Параметр Высота большого размера фотографий
+	 * @static
+	 */
+	const SETTINGS_IMAGE_LARGE_HEIGHT = 'in_team_large_height';	
 
 	/**
 	 * Сортировка вывода сотрудников
@@ -83,7 +113,22 @@ class CPT_Team
 	 * Параметр Ширина среднего размера фотографий
 	 * @static
 	 */
-	const SETTINGS_ORDER_BY = 'order_by';	
+	const SETTINGS_ORDER_BY = 'order_by';
+	
+	/**
+	 * Метабокс на странице сотрудников
+	 * @static
+	 */
+	const METABOX_ID = 'inteam_metabox';
+	
+	/**
+	 * Поле связи с пользователем
+	 * @static
+	 */
+	const META_LINKED_USER = '_linked_user_id';	
+	
+	
+	
 	
 /* ------------------------------------ Свойства -----------------------------------*/	
 	/**
@@ -133,6 +178,25 @@ class CPT_Team
 		// Хук на выборку данных
 		add_action( 'pre_get_posts', array( $this, 'setQueryParams' ) );
 		
+		// Хуки в админской части
+		if ( is_admin() ) 
+		{
+			// Схранение метаданных
+			add_action( 'save_post', array( $this, 'savePost' ), 10, 2 );
+			
+			// Инициализация метабокса
+			add_action( 'load-post.php',     array( $this, 'initMetabox' ) );
+			add_action( 'load-post-new.php', array( $this, 'initMetabox' ) );
+			
+			// Колонки в таблице пользователей в админке
+			add_filter( 'manage_' . self::TYPE . '_posts_columns' , array( $this, 'addCPTColumns' ) );
+			add_action( 'manage_' . self::TYPE . '_posts_custom_column' , array( $this, 'showCPTColumns' ), 10, 2 );
+			
+			// Поля в быстром редактировании
+			add_action( 'quick_edit_custom_box', array( $this, 'addQuickEditBox' ), 10, 2 );
+			add_action( 'admin_print_scripts-edit.php', array( $this, 'quickEditScript' ) );
+		}		
+		
 	}
 	
 	/**
@@ -174,7 +238,7 @@ class CPT_Team
 			'show_in_nav_menus'   => true,
 			'show_in_admin_bar'   => true,
 			'menu_position'       => 20,
-			'menu_icon'           => '',
+			'menu_icon'           => 'dashicons-nametag',
 			'can_export'          => true,
 			'has_archive'         => true,
 			'exclude_from_search' => false,
@@ -237,7 +301,13 @@ class CPT_Team
 			$this->plugin->settings->get( self::SETTINGS_IMAGE_MEDIUM_WIDTH, 	self::IMAGE_MEDIUM_WIDTH ), 
 			$this->plugin->settings->get( self::SETTINGS_IMAGE_MEDIUM_HEIGHT, 	self::IMAGE_MEDIUM_HEIGHT ), 
 			true );
-	}		
+			
+		// Средний размер
+		add_image_size( self::IMAGE_LARGE, 
+			$this->plugin->settings->get( self::SETTINGS_IMAGE_LARGE_WIDTH, 	self::IMAGE_LARGE_WIDTH ), 
+			$this->plugin->settings->get( self::SETTINGS_IMAGE_LARGE_HEIGHT, 	self::IMAGE_LARGE_HEIGHT ), 
+			true );		
+	}	
 	
 	/**
 	 * Установка параметров вывода данных
@@ -245,12 +315,173 @@ class CPT_Team
 	 */	
 	public function setQueryParams( $query )
 	{	
-		if ( $query->get('post_type') == self::TYPE && $query->is_main_query() )
+		if ( ( $query->get('post_type') == self::TYPE  || is_tax( self::TAXONOMY_DEPARTMENT ) )&& $query->is_main_query() )
 		{
 			$query->set( 'orderby', $this->plugin->settings->get( self::SETTINGS_ORDER_BY, self::ORDER_BY_DEFAULT ) );
 			$query->set( 'order', 'ASC' );
 			$query->set( 'posts_per_page', -1 );
 		}
+	}	
+	
+	/**
+	 * Инициализация метабокса 
+	 */	
+	public function initMetabox() 
+	{
+		// Добавляем метабокс
+		add_action( 'add_meta_boxes', array( $this, 'addMetabox' ) );
+		// Сохранение данных
+		//add_action( 'save_post', array( $this, 'savePost' ), 10, 2 );
 	}
+
+	/**
+	 * Добавление метабокса 
+	 */		
+	public function addMetabox() {
+
+		add_meta_box( self::METABOX_ID,
+			__( 'Team Member', 'in-team' ),
+			array( $this, 'renderMetabox' ),
+			'in_team',
+			'side',
+			'core'
+		);
+	}
+	
+	/**
+	 * Отрисовка метабокса 
+	 */	
+	public function renderMetabox( $post ) 
+	{
+
+		// Retrieve an existing value from the database.
+		$inteam_user_id = get_post_meta( $post->ID, self::META_LINKED_USER, true );
+
+		// Set default values.
+		if( empty( $inteam_user_id ) ) $inteam_user_id = '';
+
+		// Form fields.
+		echo '<table class="form-table">';
+
+		echo '	<tr>';
+		echo '		<th><label for="inteam_user_id" class="inteam_user_id_label">' . __( 'Link to User', INTEAM ) . '</label></th>';
+		echo '		<td>';
+		
+		wp_dropdown_users( array( 'id' => 'inteam_user_id', 'name' => 'inteam_user_id', 'class' => 'inteam_user_id_field', 'selected' => $inteam_user_id ) );
+		
+		echo '			<p class="description">' . __( 'Select the WP user', INTEAM ) . '</p>';
+		echo '		</td>';
+		echo '	</tr>';
+
+		echo '</table>';
+
+	}	
+
+	/**
+	 * Сохранение метаданных
+	 * @param int $post_id	ID записи	 
+	 * @param obj $post		Объект поста	 
+	 */	
+	public function savePost( $post_id, $post ) 
+	{
+		// don't save for autosave
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+			return $post_id;
+
+		// dont save for revisions
+		if ( isset( $post->post_type ) && $post->post_type == 'revision' )
+			return $post_id;
+
+		// Сохраняем только для нашего типа
+		if ( isset( $post->post_type ) && $post->post_type != self::TYPE )
+			return $post_id;		
+		
+		// Sanitize user input.
+		$inteam_new_user_id = isset( $_POST[ 'inteam_user_id' ] ) ? sanitize_text_field( $_POST[ 'inteam_user_id' ] ) : '';
+
+		// Update the meta field in the database.
+		update_post_meta( $post_id, self::META_LINKED_USER, $inteam_new_user_id );
+	}
+	
+	/**
+	 * Добавление колонок в таблице пользователей в админке
+	 * @param mixed $columns	Ассоциативный массив с колонками
+	 */
+	public function addCPTColumns( $columns ) 
+	{
+		// Убираем колонки
+		unset( $columns['author'] );
+		
+		// Добавляем новые колонки
+		$newColumns = array(
+			self::META_LINKED_USER 		=> __( 'Linked to', INTEAM ),
+			UserProfile::FIELD_POSITION => __( 'Position', INTEAM ),
+		);
+		return array_merge( $columns, $newColumns );		
+	}	 
+	 
+	/**
+	 * Отображение колонок в таблице пользователей в админке
+	 * @param string 	$column		Текущая колонка
+	 * @param int 		$post_id	Текущая запись
+	 */
+	public function showCPTColumns( $column, $post_id ) 
+	{
+		$linkedUserId = get_post_meta( $post_id , self::META_LINKED_USER , true );
+		
+		
+		switch ( $column ) 
+		{
+			case self::META_LINKED_USER :	
+				if ( $linkedUserId  ) 
+				{
+					// Сохраним данные для скрипта и покажем их
+					echo '<a id="linked_user_id-' . $post_id . 
+						'" data-linked-user="' . $linkedUserId . 
+						'" href="/wp-admin/user-edit.php?user_id=' . $linkedUserId . '">' .  
+						Shortcode::getUserData( $linkedUserId, 'display_name' ) . '</a>';
+				}
+				break;
+				
+				
+			case UserProfile::FIELD_POSITION :
+				echo Shortcode::getUserData( $linkedUserId, UserProfile::FIELD_POSITION );
+				break;
+		}		
+	}
+	
+	/**
+	 * Добавление и отображение полей быстрого редактирования
+	 * @param string $column_name	Текущая колонка
+	 * @param string $post_type		Текущая тип записи
+	 */
+	public function addQuickEditBox( $column_name, $post_type ) 
+	{
+		if ( $post_type == self::TYPE ) 
+		{
+			 switch( $column_name ) {
+				case self::META_LINKED_USER:
+					$inteam_user_id = get_post_meta( $post->ID, self::META_LINKED_USER, true );
+				   ?><fieldset class="inline-edit-col-right">
+					  <div class="inline-edit-group">
+						 <label for="inteam_user_id" class="title"><?php esc_html_e( 'Linked to', INTEAM ) ?></label>
+						<?php wp_dropdown_users( array( 'id' => 'inteam_user_id', 'name' => 'inteam_user_id', 'class' => 'inteam_user_id_field', 'selected' => $inteam_user_id ) ); ?>
+					  </div>
+				   </fieldset><?php
+				   break;
+			 }
+		}
+	}
+	
+	/**
+	 * Из-за особенностей WordPress поля в окне быстрого редактирования заполняем скриптом
+	 */
+	public function quickEditScript( ) 
+	{
+		wp_enqueue_script( INTEAM . '_quick_edit', 
+			INTEAM_URL . 'js/quick_edit.js', 
+			array( 'jquery', 'inline-edit-post' ), '', true );
+	}
+	
 	
 }

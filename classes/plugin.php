@@ -16,6 +16,18 @@ class Plugin
 	 * @var INTEAM\CPT_Team
 	 */
 	public $cptTeam;
+	
+	/**
+	 * Дополнения к профилю пользователя
+	 * @var INTEAM\UserProfile
+	 */
+	public $userProfile;	
+	
+	/**
+	 * Шорткоды
+	 * @var INTEAM\Shortcode
+	 */
+	public $shortcode;	
 
 
 	/**
@@ -24,11 +36,10 @@ class Plugin
 	 */
 	public function __construct()
 	{
-		// Инициализируем параметры
-		$this->settings = new Settings( INTEAM );
-		
-		// Инициализируем CPT Team
-		$this->cptTeam = new CPT_Team( $this );
+		$this->settings 	= new Settings( INTEAM ); 	// Инициализируем параметры
+		$this->cptTeam 		= new CPT_Team( $this ); 	// Инициализируем CPT Team
+		$this->userProfile 	= new UserProfile( $this );	// Инициализируем дополнения к профилю пользователя		
+		$this->shortcode 	= new Shortcode( $this );	// Инициализируем шорткоды
 		
 		// Включаем наш загрузчик шаблонов
 		add_filter( 'template_include', array( $this, 'loadTemplate' ) );

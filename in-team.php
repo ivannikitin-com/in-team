@@ -44,7 +44,9 @@ function inteam_init()
 		
 	// Классы плагина
 	require( INTEAM_PATH . 'classes/settings.php' );
+	require( INTEAM_PATH . 'classes/shortcode.php' );
 	require( INTEAM_PATH . 'classes/cpt_team.php' );
+	require( INTEAM_PATH . 'classes/userprofile.php' );
 	require( INTEAM_PATH . 'classes/plugin.php' );
 		
 	// Инициализация плагина
