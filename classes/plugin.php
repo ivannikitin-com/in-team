@@ -29,12 +29,27 @@ class Plugin
 	 */
 	public $shortcode;	
 
+	/**
+	 * Экземпляр класса Singleton
+	 */
+    protected static $_instance;
+
+	/**
+	 * Возвращает экземпляр класса
+	 */
+    public static function get() {
+        if (self::$_instance === null) {
+            self::$_instance = new self;  
+        }
+ 
+        return self::$_instance;
+    }
 
 	/**
 	 * Конструктор
 	 * Инициализация плагина
 	 */
-	public function __construct()
+	private function __construct()
 	{
 		$this->settings 	= new Settings( INTEAM ); 	// Инициализируем параметры
 		//$this->cptTeam 		= new CPT_Team( $this ); 	// Инициализируем CPT Team
@@ -58,8 +73,11 @@ class Plugin
 	 * Важно после изменения сделать сброс постоянных ссылок
 	 */
 	public function rewrite_author_base() {
+		$base_url = $this->settings->get_base_slug();
+		if ( empty( $base_url ) ) return; 
+
 		global $wp_rewrite;
-		$wp_rewrite->author_base = 'team';
+		$wp_rewrite->author_base = $base_url;
 	} 
 	
 	/**

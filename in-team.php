@@ -49,6 +49,6 @@ function inteam_init()
 	require( INTEAM_PATH . 'classes/plugin.php' );
 		
 	// Инициализация плагина
-	new INTEAM\Plugin( INTEAM_PATH, INTEAM_URL );	
+	INTEAM\Plugin::get();	
 }
 
