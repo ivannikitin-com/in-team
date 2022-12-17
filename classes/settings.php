@@ -45,6 +45,9 @@ class Settings
 			
 			// Меню настроек
 			add_action( 'admin_menu', array( $this, 'add_menu' ) );
+
+			// Кастомизация профиля пользователя
+			add_action( 'show_user_profile', array( $this, 'customize_profile' ) );
 		}
 	}
 	
@@ -198,5 +201,30 @@ class Settings
 	<?php submit_button() ?>
 </form>
 <?php	
+	}
+
+
+
+	/**
+	 * Добавляем редактор биографии в профиль пользователя
+	 * https://wordpress.stackexchange.com/questions/5012/how-to-use-tinymce-for-user-biographical-info
+	 * https://wp-kama.ru/question/wp-editor-initialize
+	 */
+	public function customize_profile() {
+		wp_enqueue_editor();
+		?>
+		<script>
+			document.addEventListener("DOMContentLoaded", function(event) {
+				var id = 'description';
+
+				wp.editor.initialize(id, {
+					tinymce: {
+						wpautop: true
+					},
+					quicktags: true
+				});
+			});
+		</script>
+		<?php
 	}
 }

@@ -21,3 +21,8 @@ WordPress по умолчанию не может вывести список в
 * https://www.wpbeginner.com/plugins/how-to-change-author-url-slug-and-base-in-wordpress/
 * https://weusewp.com/tutorial/change-author-url-slug-base/
 * https://wp-kama.ru/function/wp_rewrite
+
+Профиль пользователя
+--------------------
+* https://wordpress.stackexchange.com/questions/5012/how-to-use-tinymce-for-user-biographical-info
+* https://wp-kama.ru/question/wp-editor-initialize
