@@ -41,10 +41,26 @@ class Plugin
 		//$this->userProfile 	= new UserProfile( $this );	// Инициализируем дополнения к профилю пользователя		
 		//$this->shortcode 	= new Shortcode( $this );	// Инициализируем шорткоды
 		
+		// Перезапись базового URL для авторов
+		$this->rewrite_author_base();
+
 		// Включаем наш загрузчик шаблонов
-		add_filter( 'template_include', array( $this, 'loadTemplate' ) );
+		add_filter( 'template_include', array( $this, 'load_template' ) );
 		
 	}
+
+	/**
+	 * Перезапись базового URL для авторов
+	 * 
+	 * https://weusewp.com/tutorial/change-author-url-slug-base/
+	 * https://wp-kama.ru/function/wp_rewrite 
+	 * 
+	 * Важно после изменения сделать сброс постоянных ссылок
+	 */
+	public function rewrite_author_base() {
+		global $wp_rewrite;
+		$wp_rewrite->author_base = 'team';
+	} 
 	
 	/**
 	 * Загружает и возвращает шаблон для отображения страницы автора
@@ -53,8 +69,7 @@ class Plugin
 	 * @param string	$template	Имя загружаемого шаблона
 	 * @return string				Имя загружаемого шаблона
 	 */
-	public function loadTemplate( $template )
-	{
+	public function load_template( $template ) {
 		// Если это подзапрос, шаблоны не подставляем! Например, так сделано в WooCommerce
 		// https://docs.woocommerce.com/wc-apidocs/source-class-WC_Template_Loader.html#7-119
         if ( is_embed() )
