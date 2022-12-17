@@ -37,9 +37,9 @@ class Plugin
 	public function __construct()
 	{
 		$this->settings 	= new Settings( INTEAM ); 	// Инициализируем параметры
-		$this->cptTeam 		= new CPT_Team( $this ); 	// Инициализируем CPT Team
-		$this->userProfile 	= new UserProfile( $this );	// Инициализируем дополнения к профилю пользователя		
-		$this->shortcode 	= new Shortcode( $this );	// Инициализируем шорткоды
+		//$this->cptTeam 		= new CPT_Team( $this ); 	// Инициализируем CPT Team
+		//$this->userProfile 	= new UserProfile( $this );	// Инициализируем дополнения к профилю пользователя		
+		//$this->shortcode 	= new Shortcode( $this );	// Инициализируем шорткоды
 		
 		// Включаем наш загрузчик шаблонов
 		add_filter( 'template_include', array( $this, 'loadTemplate' ) );
