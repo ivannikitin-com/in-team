@@ -12,12 +12,6 @@ class Plugin
 	public $settings;
 	
 	/**
-	 * Custom Post Type Team
-	 * @var INTEAM\CPT_Team
-	 */
-	public $cptTeam;
-	
-	/**
 	 * Дополнения к профилю пользователя
 	 * @var INTEAM\UserProfile
 	 */
@@ -52,8 +46,7 @@ class Plugin
 	private function __construct()
 	{
 		$this->settings 	= new Settings( INTEAM ); 	// Инициализируем параметры
-		//$this->cptTeam 		= new CPT_Team( $this ); 	// Инициализируем CPT Team
-		//$this->userProfile 	= new UserProfile( $this );	// Инициализируем дополнения к профилю пользователя		
+		$this->userProfile 	= new UserProfile( $this );	// Инициализируем дополнения к профилю пользователя		
 		//$this->shortcode 	= new Shortcode( $this );	// Инициализируем шорткоды
 		
 		// Перезапись базового URL для авторов
