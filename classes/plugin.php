@@ -90,40 +90,45 @@ class Plugin
 	public function load_template( $template ) {
 		// Если это подзапрос, шаблоны не подставляем! Например, так сделано в WooCommerce
 		// https://docs.woocommerce.com/wc-apidocs/source-class-WC_Template_Loader.html#7-119
-        if ( is_embed() )
-            return $template;
+        if ( is_embed() ) return $template;
 		
-		// Сформированный файл шаблона
-		$file = '';
-		
-		// Определение нужного шаблона
-		if ( is_single() && get_post_type() == CPT_Team::TYPE ) 
-		{
-			$file = 'member.php'; 		// Шаблон карточки сотрудника		
-		}
-		elseif ( is_post_type_archive( CPT_Team::TYPE ) )
-		{
-			$file = 'team.php'; 		// Шаблон вывода всей команды
-		}		
-		elseif ( is_tax( CPT_Team::TAXONOMY_DEPARTMENT ) )
-		{
-			$file = 'department.php'; 	// Шаблон вывода отдела
+		// Если это не страница автора, ничего не делаем!
+		if ( ! is_author() ) return $template;
+
+		global $wp_query;
+
+		//error_log( 'ID: ' . get_the_ID() );
+
+	
+		// Если это не запрос пользователя, ничего не делаем
+		if ( ! isset( $wp_query ) || 
+			 ! isset( $wp_query->queried_object ) ||
+			 ! ( $wp_query->queried_object instanceof \WP_User ) ) 
+			return $template;
+
+		// Если пользователь не входит в нужную роль, переадресация на основной слаг
+		if ( ! in_array($this->settings->get_team_role(), $wp_query->queried_object->roles) ) {
+			$team_url = get_option( 'home' ) . '/' .
+				( ! empty( $this->settings->get_base_slug() ) ) ? 
+					$this->settings->get_base_slug() . '/' 
+					: ''; 
+			wp_redirect( $team_url, 301 );
+			exit;
 		}
 
-		// Если шаблон определен...
-		if ( $file ) 
-		{
-			// Где искать шаблоны
-			$find = array();
-			$find[] = $file;							// В текущей папке							
-			$find[] = INTEAM . '/' . $file; 			// В теме, в папке с названием плагина					
-			
-			$template       = locate_template( array_unique( $find ) );
-			if ( ! $template ) 
-			{ 
-				// Шаблон не найден, подгружаем из плагина
-				$template = INTEAM_PATH . 'templates/' . $file;
-			}
+		// Определяем шаблон страницы 
+		$template_file = 'profile.php';
+
+		// и указываем, где его искать
+		$find = array();
+		$find[] = $template_file;							// В текущей папке							
+		$find[] = INTEAM . '/' . $template_file; 			// В теме, в папке с названием плагина					
+		
+		$template = locate_template( array_unique( $find ) );
+		if ( ! $template ) 
+		{ 
+			// Шаблон не найден, подгружаем из плагина
+			$template = INTEAM_PATH . 'templates/' . $template_file;
 		}
 		return $template;		
 	}
