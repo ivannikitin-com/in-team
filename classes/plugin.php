@@ -89,9 +89,6 @@ class Plugin
 		if ( ! is_author() ) return $template;
 
 		global $wp_query;
-
-		//error_log( 'ID: ' . get_the_ID() );
-
 	
 		// Если это не запрос пользователя, ничего не делаем
 		if ( ! isset( $wp_query ) || 
@@ -118,7 +115,7 @@ class Plugin
 		$find[] = INTEAM . '/' . $template_file; 			// В теме, в папке с названием плагина					
 		
 		$template = locate_template( array_unique( $find ) );
-		if ( ! $template ) 
+		if ( empty( $template ) ) 
 		{ 
 			// Шаблон не найден, подгружаем из плагина
 			$template = INTEAM_PATH . 'templates/' . $template_file;

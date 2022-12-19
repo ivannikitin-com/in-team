@@ -28,7 +28,6 @@
 // Напрямую не вызываем!
 if ( ! defined( 'ABSPATH' ) ) die( '-1' );
 
-
 // Определения плагина
 define( 'INTEAM', 		'in-team' );						// Название плагина и текстовый домен
 define( 'INTEAM_PATH', 	plugin_dir_path( __FILE__ ) );		// Путь к папке плагина
