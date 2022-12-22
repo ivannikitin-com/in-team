@@ -45,9 +45,9 @@ class Plugin
 	 */
 	private function __construct()
 	{
-		$this->settings 	= new Settings( INTEAM ); 	// Инициализируем параметры
-		$this->userProfile 	= new UserProfile( $this );	// Инициализируем дополнения к профилю пользователя		
-		//$this->shortcode 	= new Shortcode( $this );	// Инициализируем шорткоды
+		$this->settings 	= new Settings(); 	 // Инициализируем параметры
+		$this->userProfile 	= new UserProfile(); // Инициализируем дополнения к профилю пользователя		
+		$this->shortcode 	= new Shortcode();	 // Инициализируем шорткоды
 		
 		// Перезапись базового URL для авторов
 		$this->rewrite_author_base();

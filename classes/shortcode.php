@@ -49,12 +49,19 @@ class Shortcode
 	 */
 	public function inteam_members( $atts, $content='', $tag='' ) {
 		$atts = shortcode_atts( array(
-			'before' => '',	// Вывод названия перед значением
-			'after'  => '',	// Вывод названия после значения
+			'before' => '',	 // Вывод любой строки перед результатом
+			'after'  => '',	 // Вывод любой строки после результата
 			'number' => 20,  // Число возвращаемых пользователей
-			'paged'	 => 1,  // Число возвращаемых пользователей
-			'search' => 1,  // Запрос для поиска пользователей, например, Иван* или *Викторович или *Виктор*
+			'paged'	 => 1,   // Номер страницы списка возвращаемых пользователей
+			'search' => '',  // Запрос для поиска пользователей, например, Иван* или *Викторович или *Виктор*
 		), $atts, $tag );
+
+		// URL страницы профиля
+		$profile_url = 
+			get_option( 'home' ) . '/' .
+			Plugin::get()->settings->get_base_slug();
+
+		error_log( '$profile_url: ' . $profile_url );
 
 		// Запрос пользователей
 		$users = get_users( array(
@@ -68,7 +75,7 @@ class Shortcode
 		$file = 'member.php';
 		$template = locate_template( array(
 			$file,					// В текущей папке темы (дочерней или родительской)
-			INTEAM . '/' . $file;	// В папке темы с названием плагина
+			INTEAM . '/' . $file	// В папке темы с названием плагина
 		) );
 		// Если шаблон не найден, берем из плагина
 		if ( empty( $template ) ) $template = INTEAM_PATH . 'templates/' . $file;
