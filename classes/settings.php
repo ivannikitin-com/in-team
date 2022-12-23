@@ -39,10 +39,7 @@ class Settings
 		
 		// Если это работа в админке
 		if ( is_admin() )
-		{
-			// Стили для админки
-			wp_enqueue_style( INTEAM, INTEAM_URL . 'css/admin.css' );
-			
+		{			
 			// Меню настроек
 			add_action( 'admin_menu', array( $this, 'add_menu' ) );
 
@@ -202,8 +199,6 @@ class Settings
 </form>
 <?php	
 	}
-
-
 
 	/**
 	 * Добавляем редактор биографии в профиль пользователя
