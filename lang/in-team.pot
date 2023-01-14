@@ -1,179 +1,94 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: IN Team\n"
-"POT-Creation-Date: 2016-12-04 12:53+0300\n"
-"PO-Revision-Date: 2016-12-04 12:52+0300\n"
-"Last-Translator: Иван Никитин <info@ivannikitin.com>\n"
-"Language-Team: Иван Никитин <info@ivannikitin.com>\n"
+"POT-Creation-Date: 2022-12-23 08:19+0300\n"
+"PO-Revision-Date: 2022-12-23 08:18+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Poedit 3.2.2\n"
 "X-Poedit-Basepath: ..\n"
+"X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: in-team.php\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SearchPathExcluded-0: *.min.js\n"
 
-#: classes/cpt_team.php:97
-msgid "Employees"
+#. Description of the plugin/theme
+#: classes/settings.php:128 classes/settings.php:129 classes/settings.php:168
+#: classes/userprofile.php:53
+msgid "Наша команда"
 msgstr ""
 
-#: classes/cpt_team.php:98
-msgid "Employee"
+#: classes/settings.php:169
+msgid "Плагин in-team управляет выводом сотрудников нашей команды"
 msgstr ""
 
-#: classes/cpt_team.php:99
-msgid "Our Team"
+#: classes/settings.php:170
+msgid "Ошибка! Поле nonce устарело, попробуйте еще раз."
 msgstr ""
 
-#: classes/cpt_team.php:100
-msgid "Parent Employee"
+#: classes/settings.php:172
+msgid ""
+"Для настройки нужно создать страницу вывода команды сотрудников и указать ее "
+"здесь в поле ниже."
 msgstr ""
 
-#: classes/cpt_team.php:101
-msgid "All Employees"
+#: classes/settings.php:173
+msgid ""
+"Например, вы создали страницу со слагом 'team'. Плагин сформирует вывод "
+"отдельных членов команды со слагом 'team/name/', где name -- это слаг или "
+"короткое имя пользователя."
 msgstr ""
 
-#: classes/cpt_team.php:102
-msgid "View Employee"
+#: classes/settings.php:174
+msgid ""
+"Это будет выполняться только для пользователей с указанной ролью, для всех "
+"остальных пользователей будет выполнена переадресация на общую страницу "
+"команды."
 msgstr ""
 
-#: classes/cpt_team.php:103
-msgid "New Employee"
+#: classes/settings.php:181
+msgid "Страница вывода команды"
 msgstr ""
 
-#: classes/cpt_team.php:104
-msgid "Add Employee"
+#: classes/settings.php:193
+msgid "Роль пользователей команды"
 msgstr ""
 
-#: classes/cpt_team.php:105
-msgid "Edit Employee"
+#: classes/userprofile.php:16
+msgid "Должность"
 msgstr ""
 
-#: classes/cpt_team.php:106
-msgid "Update Employee"
+#: classes/userprofile.php:17 templates/profile.php:54
+msgid "Рабочий телефон"
 msgstr ""
 
-#: classes/cpt_team.php:107
-msgid "Search Employee"
+#: classes/userprofile.php:18
+msgid "Телеграм"
 msgstr ""
 
-#: classes/cpt_team.php:108 classes/cpt_team.php:162
-msgid "Not found"
+#: templates/profile.php:49
+msgid "Контакты"
 msgstr ""
 
-#: classes/cpt_team.php:109
-msgid "Not found in trash"
+#: templates/profile.php:53
+msgid "E-mail"
 msgstr ""
 
-#: classes/cpt_team.php:119
-msgid "Employee details"
+#: templates/profile.php:55
+msgid "Личный телефон"
 msgstr ""
 
-#: classes/cpt_team.php:148 classes/cpt_team.php:150
-msgid "Departments"
-msgstr ""
-
-#: classes/cpt_team.php:149
-msgid "Department"
-msgstr ""
-
-#: classes/cpt_team.php:151
-msgid "All departments"
-msgstr ""
-
-#: classes/cpt_team.php:152 classes/cpt_team.php:153
-msgid "Parent department"
-msgstr ""
-
-#: classes/cpt_team.php:154
-msgid "New department"
-msgstr ""
-
-#: classes/cpt_team.php:155
-msgid "Add department"
-msgstr ""
-
-#: classes/cpt_team.php:156
-msgid "Edit department"
-msgstr ""
-
-#: classes/cpt_team.php:157
-msgid "Update department"
-msgstr ""
-
-#: classes/cpt_team.php:158
-msgid "Separate departments by comma"
-msgstr ""
-
-#: classes/cpt_team.php:159
-msgid "Search department"
-msgstr ""
-
-#: classes/cpt_team.php:160
-msgid "Add or remove department"
-msgstr ""
-
-#: classes/cpt_team.php:161
-msgid "Most used departments"
-msgstr ""
-
-#: classes/settings.php:113 classes/settings.php:147
-msgid "IN Team Settings"
-msgstr ""
-
-#: classes/settings.php:114
-msgid "Settings"
-msgstr ""
-
-#: classes/settings.php:148
-msgid "This plugin creates \"Our Team\" section on site."
-msgstr ""
-
-#: classes/settings.php:149
-msgid "Error: The nonce is not valid!"
-msgstr ""
-
-#: classes/settings.php:155
-msgid "Team slug"
-msgstr ""
-
-#: classes/settings.php:158
-msgid "Specify the slug of the Team section. \""
-msgstr ""
-
-#: classes/settings.php:160 classes/settings.php:170
-msgid "\" is using by default if this parameter is empty."
-msgstr ""
-
-#: classes/settings.php:165
-msgid "Department slug"
-msgstr ""
-
-#: classes/settings.php:168
-msgid "Specify the slug of the Department taxomony. \""
-msgstr ""
-
-#: classes/settings.php:175
-msgid "Don't forget to reset the permalinks"
-msgstr ""
-
-#: classes/settings.php:176
-msgid "here"
-msgstr ""
-
-#: classes/settings.php:177
-msgid "for flushing Wordpress URL rewrite rules."
-msgstr ""
-
-#: classes/settings.php:178
-msgid "Just click on [Save] button on Permalinks options page"
+#: templates/profile.php:98
+msgid "Публикации"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
@@ -181,15 +96,11 @@ msgid "IN Team"
 msgstr ""
 
 #. Plugin URI of the plugin/theme
-msgid "http://in-soft.pro/plugins/in-team/"
-msgstr ""
-
-#. Description of the plugin/theme
-msgid "Our team directory"
+msgid "https://github.com/ivannikitin-com/in-team"
 msgstr ""
 
 #. Author of the plugin/theme
-msgid "Ivan Nikitin and partners"
+msgid "Иван Никитин и партнеры"
 msgstr ""
 
 #. Author URI of the plugin/theme

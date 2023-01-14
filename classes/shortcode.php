@@ -7,165 +7,93 @@ class Shortcode
 {
 	/**
 	 * Конструктор
-	 * инициализирует шорткоды
-	 * @param INTEAM\Plugin plugin		Ссылка на основной объект плагина 
+	 * Регистрирует шорткоды
 	 */
-	public function __construct( $plugin )
-	{
-		$shortcodes = array(
-			'inteam_position',		// Показывает должность сотрудника
-			'inteam_email',			// Показывает E-mail сотрудника
-			'inteam_phone',			// Показывает телефон сотрудника
-			'inteam_departament',	// Показывает отдел сотрудника
-		);
-		
-		// Регистрируем их!
-		foreach( $shortcodes as $shortcode )
-		{
-			add_shortcode( $shortcode, array( __CLASS__, $shortcode ) );
-		}
+	public function __construct()
+	{		
+		// Вывод поля из профиля пользователя
+		add_shortcode( 'inteam_field', array( $this, 'inteam_field' ) );
+
+		// Вывод списка команды
+		add_shortcode( 'inteam_members', array( $this, 'inteam_members' ) );
 	}
 	
-	/* ---------------------------------- Функция вывода данных ----------------------------------*/
 	/**
-	 * Выводит поле данных для пользователяё
-	 * @param int		$userId 	ID пользователя 
-	 * @param string	$field 		Поле, которое нужно вывести 
-	 * @param string	$label 		Текст перед выводом 
-	 */	
-	public static function getUserData( $userId, $field, $label ) 
-	{
-		if ( empty( $userId ) || empty( $field ) )
-			return false;
-		
-		$user = get_userdata( $userId );
-		if ( empty( $user ) )
-			return false;
-		
-		if ( ! empty( $label ) )
-			$label = $label . ' ';
-		
-		return $label . $user->$field;
+	 * Выводит поле из профиля пользователя
+	 * @param mixed  $atts 		Ассоциативный массив атрибутов указанных в шорткоде	
+	 * @param string $content 	Текст шорткода, когда используется контентный шорткод	
+	 * @param string $tag 		Имя шорткода. Передается в хуки.
+	 * @return string			Функция шорткода должна вернуть данные, а не выводить их - return, а не echo.	
+	 */
+	public function inteam_field( $atts, $content='', $tag='' ) {
+		$atts = shortcode_atts( array(
+			'field' 	=> '',	// Идентификатор поля для вывода
+			'before' 	=> '',	// Вывод любой строки перед значением
+			'after' 	=> '',	// Вывод любой строки после значения
+			'user_id' 	=> 0	// Идентификатор пользователя
+		), $atts, $tag );
+
+		return  
+			$atts[ 'before' ] . 
+			get_user_meta( $atts[ 'user_id' ], $atts[ 'field' ], true ) .
+			$content .
+			$atts[ 'after' ];
 	}	
-	
+
 	/**
-	 * Общзая функция для шорткодов, связанных с полями пользователя
-	 * @param mixed		$atts 		Переданные атрибуты шорткода 
-	 * @param string	$content 	Контент шорткода 
-	 * @param string	$field 		Поле, которое нужно вывести 
-	 */	
-	public static function userDataShortcode( $atts, $content, $field ) 
-	{
-		// Если не заданы User ID и Post ID выводим пусто
-		if ( empty( $atts['user_id'] ) && empty( $atts['post_id'] ) )
-			return false;
-		
-		if ( empty( $atts['user_id'] ) )
-		{
-			// Читаем ID связанного пользователя
-			$linkedUserId = get_post_meta( $atts['post_id'], CPT_Team::META_LINKED_USER , true );
-			if ( empty( $linkedUserId ) )
-				return false;
-			
-			// Возвращаем данные
-			return self::getUserData( $linkedUserId, $field, $atts['label'] );			
-		}
-		else
-		{
-			// Задан User ID - выводим
-			return self::getUserData( $atts['user_id'], $field, $atts['label'] );
-		}
-		
-		return false;
-	}	
-	
-	
-	/* ---------------------------------- Функции шорткодов ----------------------------------*/	
-	public static function inteam_position( $atts, $content = '' ) 
-	{
+	 * Выводит список членов команды
+	 * @param mixed  $atts 		Ассоциативный массив атрибутов указанных в шорткоде	
+	 * @param string $content 	Текст шорткода, когда используется контентный шорткод	
+	 * @param string $tag 		Имя шорткода. Передается в хуки.
+	 * @return string			Функция шорткода должна вернуть данные, а не выводить их - return, а не echo.	
+	 */
+	public function inteam_members( $atts, $content='', $tag='' ) {
 		$atts = shortcode_atts( array(
-			'label' 	=> '',				// Вывод названия перед значением
-			'user_id' 	=> 0,				// Идентификатор пользователя
-			'post_id' 	=> 0,				// Идентификатор записи in_team
-		), $atts, __FUNCTION__ );
+			'before' => '',	 // Вывод любой строки перед результатом
+			'after'  => '',	 // Вывод любой строки после результата
+			'number' => 20,  // Число возвращаемых пользователей
+			'paged'	 => 1,   // Номер страницы списка возвращаемых пользователей
+			'search' => '',  // Запрос для поиска пользователей, например, Иван* или *Викторович или *Виктор*
+		), $atts, $tag );
 
-		return self::userDataShortcode( $atts, $content, UserProfile::FIELD_POSITION );
-	}	
-	
-	public static function inteam_email( $atts, $content = '' ) 
-	{
-		$atts = shortcode_atts( array(
-			'label' 	=> '',				// Вывод названия перед значением
-			'user_id' 	=> 0,				// Идентификатор пользователя
-			'post_id' 	=> 0,				// Идентификатор записи in_team
-		), $atts, __FUNCTION__ );
+		// URL страницы профиля
+		$profile_url = 
+			get_option( 'home' ) . '/' .
+			Plugin::get()->settings->get_base_slug();
 
-		return self::userDataShortcode( $atts, $content, 'user_email' );
-	}	
-	
-	public static function inteam_phone( $atts, $content = '' ) 
-	{
-		$atts = shortcode_atts( array(
-			'label' 	=> '',				// Вывод названия перед значением
-			'user_id' 	=> 0,				// Идентификатор пользователя
-			'post_id' 	=> 0,				// Идентификатор записи in_team
-		), $atts, __FUNCTION__ );
+		error_log( '$profile_url: ' . $profile_url );
 
-		return self::userDataShortcode( $atts, $content, 'billing_phone' );
-	}	
-	
-	public static function inteam_departament( $atts, $content = '' ) 
-	{
-		$atts = shortcode_atts( array(
-			'label' 	=> '',				// Вывод названия перед значением
-			'user_id' 	=> 0,				// Идентификатор пользователя
-			'post_id' 	=> 0,				// Идентификатор записи in_team
-		), $atts, __FUNCTION__ );
+		// Запрос пользователей
+		$users = get_users( array(
+			'role__in' => Plugin::get()->settings->get_team_role(),
+			'number' => $atts[ 'number' ],
+			'paged' => $atts[ 'paged' ],
+			'search' => $atts[ 'search' ]
+		) );
 
-		// Если НЕ задан post ID, ищем запись в команде по user_id
-		if ( empty( $atts['post_id'] ) )
-		{
-			if ( empty( $atts['user_id'] ) )
-				return false;
-			
-			// Параметры запроса по мета-полю
-			$args = array(
-			'post_type'		=>	CPT_Team::TYPE,
-			'meta_query'	=>	array(
-				array( '_linked_user_id'	=>	$atts['user_id'] )
-				)
-			);
-			
-			// Выполняем запрос
-			$my_query = new WP_Query( $args );		
-			if( $my_query->have_posts() ) 
-			{
-				$my_query->the_post();
-				$atts['post_id'] = get_the_ID();
-			}
-			// Сброс данных для основного цикла
-			wp_reset_postdata();			
+		// Найдем шаблон вывода
+		$file = 'member.php';
+		$template = locate_template( array(
+			$file,					// В текущей папке темы (дочерней или родительской)
+			INTEAM . '/' . $file	// В папке темы с названием плагина
+		) );
+		// Если шаблон не найден, берем из плагина
+		if ( empty( $template ) ) $template = INTEAM_PATH . 'templates/' . $file;
+
+		// Формируем вывод
+		ob_start();
+		foreach ($users as $user) {
+			@include( $template );
 		}
-		
-		
-		// Если задан post ID, читаем таксономию текущей записи
-		if ( ! empty( $atts['post_id'] ) )
-		{
-			// Читаем отделы для этой записи
-			$departament = '';
-			$departs = get_the_terms( $atts['post_id'], CPT_Team::TAXONOMY_DEPARTMENT, array( 'fields' => 'names' ) );
-			foreach ( $departs as $depart )
-				$departament .= $depart->name . ', ';
-				
-			if ( ! empty( $atts['label'] ) )
-				$atts['label'] = $atts['label'] . ' ';
-			
-			if ( mb_strlen( $departament ) > 0 )
-				$departament = mb_substr( $departament, 0, mb_strlen( $departament ) - 2 );
-			
-			return $atts['label'] . $departament;		
-		}
-		
-		return false;		
-	}	
+
+		// Формируем результат
+		$result = ob_get_contents();
+		ob_end_clean();
+
+		return  
+			$atts[ 'before' ] . 
+			$result .
+			$content .
+			$atts[ 'after' ];
+	}
 }

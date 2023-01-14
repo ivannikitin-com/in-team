@@ -1,44 +1,47 @@
 <?php
 /**
- * The Template for displaying Team Member Profile
+ * Шаблон вывода члена команды
  *
- * This template can be overridden by copying it to yourtheme/in-team/profile.php
+ * Этот шаблон может быть переопределен копированием этого файла в тему сайта your_theme/in-team/member.php
+ * 
+ * Шаблон выполняется в контексте метода shortcode::inteam_members()
+ * В шаблоне определены следующие переменные:
+ *  WP_User $user           Текущий член команды. Экземпляр WP_User
+ *  mixed   $users          Все найденные члены команды. Массив WP_User
+ *  mixed   $atts           Переданные атрибуты шорткоду
+ *  string  $template       Путь к текущему файлу шаблона
+ *  string  $profile_url    URL профилей пользователей, страница Наша команда
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; // Exit if accessed directly
-}
-get_header(); ?>
-<section>
-	<?php
+?>
+<div id="in-team-member-<?php echo esc_attr( $user->user_nicename )?>" class="in-team in-team-member">
+    <?php
 		/**
-		 * inteam_before_main_content hook
+		 * inteam_member_before hook
 		 */
-		do_action( 'inteam_before_main_content' );
+		do_action( 'inteam_member_before' );
 	?>
-	
-	<?php while ( have_posts() ) : the_post(); ?>
-		<div class="single in-team">
-			<h1><?php the_title() ?></h1>
-			<?php if ( has_post_thumbnail() ): ?>
-				<?php the_post_thumbnail() ?>
-			<?php endif; ?>
-			<?php the_content(); ?>
-		</div>
-	<?php endwhile; // end of the loop. ?>
-
-	<?php
+    <a href="<?php echo $profile_url . '/' . esc_attr( $user->user_nicename ) ?>">
+        <?php
+        // Аватар пользователя
+        // https://wp-kama.ru/function/get_avatar
+        echo apply_filters('inteam_member_avatar', 
+            get_avatar( 
+                $user->user_email, 
+                apply_filters('inteam_member_avatar_size', 150, $user),
+                apply_filters('inteam_member_avatar_default', '', $user),
+                apply_filters('inteam_member_avatar_alt', $user->display_name, $user),
+                apply_filters('inteam_member_avatar_args', array(), $user )
+            ), 	$user );
+        ?>
+        <h3><?php echo apply_filters('inteam_member_display_name' , $user->display_name, $user ); ?></h3>
+        <div class="position">
+            <?php echo apply_filters('inteam_member_position' , $user->position, $user ); ?>
+        </div>
+    </a>
+    <?php
 		/**
-		 * inteam_after_main_content hook
+		 * inteam_member_after hook
 		 */
-		do_action( 'inteam_after_main_content' );
+		do_action( 'inteam_member_after' );
 	?>
-
-	<?php
-		/**
-		 * inteam_sidebar hook.
-		 */
-		do_action( 'inteam_sidebar' );
-	?>
-</section>
-<?php get_footer(); ?>
+</div>

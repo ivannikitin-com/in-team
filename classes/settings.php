@@ -6,6 +6,13 @@ namespace INTEAM;
 class Settings
 {
 	/**
+	 * Используемые настройки
+	 */
+	const TEAM_PAGE = 'inteam-page';	// Страница вывода команды
+	const TEAM_SLUG = 'inteam-slug';	// Слаг страницы команды
+	const TEAM_ROLE = 'inteam-role';	// Роль пользователей команды
+
+	/**
 	 * Название опции в Wordpress
 	 * @var string
 	 */
@@ -21,24 +28,23 @@ class Settings
 	/**
 	 * Конструктор
 	 * инициализирует параметры и загружает данные
-	 * @param string optionName		Название опции в Wordpress, по умолчанию используется имя класса
 	 */
-	public function __construct( $optionName = '' )
+	public function __construct()
 	{
-		if ( empty ( $optionName ) ) $optionName = get_class( $this );
-		$this->_name = $optionName;
+		// Название опции в Wordpress,используется имя класса
+		$this->_name = get_class( $this );
 		
 		// Загружаем параметры
 		$this->load();
 		
 		// Если это работа в админке
 		if ( is_admin() )
-		{
-			// Стили для админки
-			wp_enqueue_style( INTEAM, INTEAM_URL . 'css/admin.css' );
-			
-			// Страница настроек
-			add_action( 'admin_menu', array( $this, 'addSettingsPage' ) );
+		{			
+			// Меню настроек
+			add_action( 'admin_menu', array( $this, 'add_menu' ) );
+
+			// Кастомизация профиля пользователя
+			add_action( 'show_user_profile', array( $this, 'customize_profile' ) );
 		}
 	}
 	
@@ -55,7 +61,14 @@ class Settings
 	 */
 	public function save()
 	{
+		// Сохранение параметров
 		update_option( $this->_name, $this->_params );
+
+		// Установка правил перезаписи URL
+		Plugin::get()->rewrite_author_base();
+
+		// Сброс постоянных ссылок
+		flush_rewrite_rules();
 	}
 
 	/**
@@ -86,100 +99,127 @@ class Settings
 	}
 	
 	/**
-	 * Чтение свойства
-	 * @param string	$param		Название параметра
-	 */
-	public function __get( $param )
-	{
-		return $this->get( $param );
+	 * Возвращает URL перезаписи страниц командны 
+	 */	
+	public function get_base_slug() {
+		return $this->get( self::TEAM_SLUG );
 	}
+
 	/**
-	 * Запись свойства
-	 * @param string	$param		Название параметра
-	 */
-	public function __set( $param, $value )
-	{
-		return $this->set( $param, $value );
+	 * Возвращает роль пользователя команды 
+	 */	
+	public function get_team_role() {
+		return $this->get( self::TEAM_ROLE );
 	}	
-	
 
 	/** ==========================================================================================
-	 * Добавляет страницу настроект плагина в меню типа данных
+	 * Добавляет пункт меню настроек плагина в меню пользователей
 	 */
-	public function addSettingsPage()
+	public function add_menu()
 	{
-		add_submenu_page(
-			'edit.php?post_type=' . CPT_Team::TYPE,
-			__( 'IN Team Settings', INTEAM ),
-			__( 'Settings', INTEAM ),
-			'manage_options',
-			INTEAM,
-			array( $this, 'showSettingsPage' )
-		);		
+		// Если у пользователя нет прав, ничего не делаем
+		if ( ! current_user_can( 'edit_users' ) ) return;
+
+		// Добавляем пункт меню
+		add_users_page(
+			__( 'Наша команда', INTEAM ),			// Название страницы
+			__( 'Наша команда', INTEAM ),			// Название меню
+			'manage_options',						// Права на редактирование
+			INTEAM,									// Слаг настроек
+			array( $this, 'show_settings_page' ),	// Функция отрисовки
+			3										// Позиция в меню
+		);	
 	}
 	
 	/** 
-	 * Выводит страницу настроект плагина
+	 * Выводит страницу настроек плагина
 	 */
-	public function showSettingsPage( )
+	public function show_settings_page( )
 	{	
-		$nonceField = INTEAM;
-		$nonceAction = 'save-settings';
-		$nonceError = false;
+		$nonce_field = INTEAM;
+		$nonce_action = 'save-settings';
+		$nonce_error = false;
 		
 		// Обработка формы
 		if ( $_SERVER['REQUEST_METHOD'] == 'POST' )
 		{
-			if ( ! isset( $_POST[$nonceField] ) || ! wp_verify_nonce( $_POST[$nonceField], $nonceAction ) ) 
+			if ( ! isset( $_POST[$nonce_field] ) || ! wp_verify_nonce( $_POST[$nonce_field], $nonce_action ) ) 
 			{
-				$nonceError = true;
+				$nonce_error = true;
 			} 
 			else 
 			{
-				// process form data
-				$this->set( CPT_Team::SETTINGS_SLUG, 						sanitize_text_field( $_POST['inteamSlug'] ) );
-				$this->set( CPT_Team::SETTINGS_SLUG_TAXONOMY_DEPARTMENT, 	sanitize_text_field( $_POST['inteamDepartmentSlug'] ) );
+				// Сохраним переданные данные настроек
+				$this->set( self::TEAM_PAGE, sanitize_text_field( $_POST[ self::TEAM_PAGE ] ) );
+				$this->set( self::TEAM_ROLE, sanitize_text_field( $_POST[ self::TEAM_ROLE ] ) );
+
+				// Узнаем слаг страницы команды
+				$this->set( self::TEAM_SLUG, get_post_field( 'post_name', $this->get(self::TEAM_PAGE) ) );
+
+				// Сохраним настройки
 				$this->save();
 			}		
 		}
 		
 ?>
-<h1><?php esc_html_e( 'IN Team Settings', INTEAM ) ?></h1>
-<p><?php esc_html_e( 'This plugin creates "Our Team" section on site.', INTEAM ) ?></p>
-<?php if ( $nonceError ) _e( 'Error: The nonce is not valid!', INTEAM ) ?>
+<h1><?php esc_html_e( 'Наша команда', INTEAM ) ?></h1>
+<p><?php esc_html_e( 'Плагин in-team управляет выводом сотрудников нашей команды', INTEAM ) ?></p>
+<?php if ( $nonce_error ) _e( 'Ошибка! Поле nonce устарело, попробуйте еще раз.', INTEAM ) ?>
+<hr>
+<p><?php esc_html_e( 'Для настройки нужно создать страницу вывода команды сотрудников и указать ее здесь в поле ниже.', INTEAM ) ?></p>
+<p><?php esc_html_e( 'Например, вы создали страницу со слагом \'team\'. Плагин сформирует вывод отдельных членов команды со слагом \'team/name/\', где name -- это слаг или короткое имя пользователя.', INTEAM ) ?></p>
+<p><?php esc_html_e( 'Это будет выполняться только для пользователей с указанной ролью, для всех остальных пользователей будет выполнена переадресация на общую страницу команды.', INTEAM ) ?></p>
+<hr>
 
 <form id="inteam-settings" action="<?php echo $_SERVER['REQUEST_URI']?>" method="post">
-	<?php wp_nonce_field( $nonceAction, $nonceField ) ?>
+	<?php wp_nonce_field( $nonce_action, $nonce_field ) ?>
 	
 	<div class="inteam-field">
-		<label for="inteamSlug"><?php esc_html_e( 'Team slug', INTEAM ) ?></label>
+		<label for="<?php echo self::TEAM_PAGE ?>"><?php esc_html_e( 'Страница вывода команды', INTEAM ) ?></label>
 		<div class="inteam-input">
-			<input id="inteamSlug" name="inteamSlug" type="text" value="<?php echo esc_attr( $this->get( CPT_Team::SETTINGS_SLUG ) ) ?>" />
-			<p><?php esc_html_e( 'Specify the slug of the Team section. "', INTEAM ); 
-			echo CPT_Team::SETTINGS_SLUG_DEFAULT;
-			esc_html_e( '" is using by default if this parameter is empty.', INTEAM ) ?></p>
+			<?php wp_dropdown_pages( array( 
+				'id' 		=> self::TEAM_PAGE, 
+				'name' 		=> self::TEAM_PAGE, 
+				'selected' 	=> $this->get( self::TEAM_PAGE ) 
+				) ); 
+			?>
 		</div>
 	</div>
 	
 	<div class="inteam-field">
-		<label for="inteamDepartmentSlug"><?php esc_html_e( 'Department slug', INTEAM ) ?></label>
+		<label for="<?php echo self::TEAM_ROLE ?>"><?php esc_html_e( 'Роль пользователей команды', INTEAM ) ?></label>
 		<div class="inteam-input">
-			<input id="inteamDepartmentSlug" name="inteamDepartmentSlug" type="text" value="<?php echo esc_attr( $this->get( CPT_Team::SETTINGS_SLUG_TAXONOMY_DEPARTMENT ) ) ?>" />
-			<p><?php esc_html_e( 'Specify the slug of the Department taxomony. "', INTEAM ); 
-			echo CPT_Team::SETTINGS_SLUG_TAXONOMY_DEPARTMENT_DEFAULT;
-			esc_html_e( '" is using by default if this parameter is empty.', INTEAM ) ?></p>
+			<select id="<?php echo self::TEAM_ROLE ?>" name="<?php echo self::TEAM_ROLE ?>">
+				<?php wp_dropdown_roles( $this->get( self::TEAM_ROLE ) ) ?>
+			</select>
 		</div>
 	</div>
-	
-	<p>
-		<?php esc_html_e( 'Don\'t forget to reset the permalinks', INTEAM) ?>
-		<a href="/wp-admin/options-permalink.php"><?php esc_html_e( 'here', INTEAM) ?></a> 
-		<?php esc_html_e( 'for flushing Wordpress URL rewrite rules.', INTEAM) ?>
-		<?php esc_html_e( 'Just click on [Save] button on Permalinks options page', INTEAM) ?>
-	</p>
 	
 	<?php submit_button() ?>
 </form>
 <?php	
+	}
+
+	/**
+	 * Добавляем редактор биографии в профиль пользователя
+	 * https://wordpress.stackexchange.com/questions/5012/how-to-use-tinymce-for-user-biographical-info
+	 * https://wp-kama.ru/question/wp-editor-initialize
+	 */
+	public function customize_profile() {
+		wp_enqueue_editor();
+		?>
+		<script>
+			document.addEventListener("DOMContentLoaded", function(event) {
+				var id = 'description';
+
+				wp.editor.initialize(id, {
+					tinymce: {
+						wpautop: true
+					},
+					quicktags: true
+				});
+			});
+		</script>
+		<?php
 	}
 }

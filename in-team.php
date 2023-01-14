@@ -1,10 +1,10 @@
 <?php 
 /**
  * Plugin Name: IN Team
- * Plugin URI: http://in-soft.pro/plugins/in-team/
- * Description: Our team directory
- * Version: 0.1
- * Author: Ivan Nikitin and partners
+ * Plugin URI: https://github.com/ivannikitin-com/in-team
+ * Description: Наша команда
+ * Version: 1.0.1
+ * Author: Иван Никитин и партнеры
  * Author URI: http://ivannikitin.com
  * Text domain: in-team
  *
@@ -26,9 +26,7 @@
  */
 
 // Напрямую не вызываем!
-if ( ! defined( 'ABSPATH' ) ) 
-	die( '-1' );
-
+if ( ! defined( 'ABSPATH' ) ) die( '-1' );
 
 // Определения плагина
 define( 'INTEAM', 		'in-team' );						// Название плагина и текстовый домен
@@ -45,11 +43,10 @@ function inteam_init()
 	// Классы плагина
 	require( INTEAM_PATH . 'classes/settings.php' );
 	require( INTEAM_PATH . 'classes/shortcode.php' );
-	require( INTEAM_PATH . 'classes/cpt_team.php' );
 	require( INTEAM_PATH . 'classes/userprofile.php' );
 	require( INTEAM_PATH . 'classes/plugin.php' );
 		
 	// Инициализация плагина
-	new INTEAM\Plugin( INTEAM_PATH, INTEAM_URL );	
+	INTEAM\Plugin::get();	
 }
 
