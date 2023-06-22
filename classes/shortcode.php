@@ -54,6 +54,9 @@ class Shortcode
 			'number' => 20,  // Число возвращаемых пользователей
 			'paged'	 => 1,   // Номер страницы списка возвращаемых пользователей
 			'search' => '',  // Запрос для поиска пользователей, например, Иван* или *Викторович или *Виктор*
+			'orderby' => 'display_name',	// Поле для сортировки. Возможные значения: email, url, registered, display_name, post_count, meta_value, meta_value_num, $meta_key (ключ массива запроса из meta_query)
+			'meta_key' => 'sort_order',	// Поле для сортировки. Возможные значения: email, url, registered, display_name, post_count, meta_value, meta_value_num, $meta_key (ключ массива запроса из meta_query)
+			'order' => 'ASC'	// Порядок сортировки
 		), $atts, $tag );
 
 		// URL страницы профиля
@@ -65,10 +68,14 @@ class Shortcode
 
 		// Запрос пользователей
 		$users = get_users( array(
-			'role__in' => Plugin::get()->settings->get_team_role(),
-			'number' => $atts[ 'number' ],
-			'paged' => $atts[ 'paged' ],
-			'search' => $atts[ 'search' ]
+			'role__in'		=> Plugin::get()->settings->get_team_role(),
+			'number' 		=> $atts[ 'number' ],
+			'paged'			=> $atts[ 'paged' ],
+			'search'		=> $atts[ 'search' ],
+			'orderby'		=> $atts[ 'orderby' ],
+			'orderby'		=> $atts[ 'orderby' ],
+			'meta_key'		=> ( 'meta_value' == $atts[ 'orderby' ] ) ? $atts[ 'meta_key' ] : null,
+			'order'			=> $atts[ 'order' ]
 		) );
 
 		// Найдем шаблон вывода
