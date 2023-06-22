@@ -16,6 +16,7 @@ class UserProfile
 			'position'    => __( 'Должность', INTEAM ),
 			'work_phone'  => __( 'Рабочий телефон', INTEAM ),
 			'telegram' 	  => __( 'Телеграм', INTEAM ),
+			'sort_order'  => __( 'Порядок сортировки', INTEAM )
 		);
 	}
 	
