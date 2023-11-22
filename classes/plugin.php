@@ -54,7 +54,10 @@ class Plugin
 
 		// Включаем наш загрузчик шаблонов
 		add_filter( 'template_include', array( $this, 'load_template' ) );
-		
+
+		// Отключаем фильтр HTML для биографии авторов
+		remove_filter('pre_user_description', 'wp_filter_kses');
+
 	}
 
 	/**
