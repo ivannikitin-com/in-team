@@ -23,7 +23,6 @@ $user = ( isset($_GET[ 'author_name' ] ) ) ? get_user_by('slug', $author_name) :
 		 */
 		do_action( 'inteam_before_main_content' );
 	?>
-
     <h2><?php echo apply_filters('inteam_display_name' , $user->display_name, $user ); ?></h2>
 
 	<?php
