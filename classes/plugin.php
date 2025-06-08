@@ -91,6 +91,13 @@ class Plugin
 		// Если это не страница автора, ничего не делаем!
 		if ( ! is_author() ) return $template;
 
+		// Если запрос не к базовому URL, ничего не делаем.
+		// Это необходимо, так как просто обращаение может ломать подгрузку 
+		// других шаблонов например, WooCommerce.
+		$base_url = $this->settings->get_base_slug();
+		if ( empty( $base_url ) ) return $template;
+		if ( $_SERVER['REQUEST_URI'] != '/' . $base_url ) return $template;
+
 		global $wp_query;
 	
 		// Если это не запрос пользователя, ничего не делаем
