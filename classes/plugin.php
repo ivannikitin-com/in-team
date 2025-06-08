@@ -52,6 +52,10 @@ class Plugin
 		// Перезапись базового URL для авторов
 		$this->rewrite_author_base();
 
+		// Правила для ЧПУ авторов
+		add_filter( 'rewrite_rules_array', array( $this, 'get_rewrite_rules' ) );
+		add_filter( 'query_vars', array( $this, 'get_query_vars' ) );
+
 		// Включаем наш загрузчик шаблонов
 		add_filter( 'template_include', array( $this, 'load_template' ) );
 
@@ -76,6 +80,33 @@ class Plugin
 		$wp_rewrite->author_base = $base_url;
 	} 
 	
+	/**
+	 * Определение нового правила перезаписи ЧПУ
+	 * 
+	 * https://wp-kama.ru/function/wp_rewrite
+	 * 
+	 */
+	public function get_rewrite_rules( $rules ) {
+		$base_url = $this->settings->get_base_slug();
+		if ( empty( $base_url ) ) 
+			return $rules;
+
+		$author_rules = array(
+			$base_url . '/([^/]+)/?(([^/]+)/?)?$' => 'index.php?author_name=$matches[1]&subpage=$matches[2]'
+		);
+	
+		return $author_rules + $rules;		
+	}
+
+	/**
+	 * Возвращает переменные при разборе ЧПУ автора
+	 */
+	public function get_query_vars( $vars ) {
+		array_push( $vars, 'subpage' );
+		return $vars;
+	}
+
+
 	/**
 	 * Загружает и возвращает шаблон для отображения страницы автора
 	 * http://wordpress.stackexchange.com/questions/155871/create-template-author-with-a-plugin
