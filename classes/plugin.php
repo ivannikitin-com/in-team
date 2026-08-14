@@ -125,9 +125,15 @@ class Plugin
 		// Если запрос не к базовому URL, ничего не делаем.
 		// Это необходимо, так как просто обращаение может ломать подгрузку 
 		// других шаблонов например, WooCommerce.
+		// ВАЖНО: проверяем принадлежность пути базовому слагу (/team или /team/<user>/...),
+		// а не строгое равенство. Иначе проверка ролей не срабатывает для страниц
+		// сотрудников и в индекс попадают страницы ВСЕХ пользователей сайта.
 		$base_url = $this->settings->get_base_slug();
 		if ( empty( $base_url ) ) return $template;
-		if ( $_SERVER['REQUEST_URI'] != '/' . $base_url ) return $template;
+
+		$request_path = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		if ( $request_path !== '/' . $base_url && 0 !== strpos( $request_path, '/' . $base_url . '/' ) )
+			return $template;
 
 		global $wp_query;
 	
@@ -140,10 +146,18 @@ class Plugin
 		// Если пользователь не входит в нужную роль, переадресация на основной слаг
 		if ( ! in_array($this->settings->get_team_role(), $wp_query->queried_object->roles) ) {
 			$team_url = get_option( 'home' ) . '/' .
-				( ! empty( $this->settings->get_base_slug() ) ) ? 
+				( ! empty( $this->settings->get_base_slug() ) ? 
 					$this->settings->get_base_slug() . '/' 
-					: ''; 
+					: '' ); 
 			wp_redirect( $team_url, 301 );
+			exit;
+		}
+
+		// Подстраницы профиля сотрудника не реализованы (например, /team/ivan/team/):
+		// переадресуем на канонический URL профиля, чтобы не плодить дубли в индексе.
+		$subpage = get_query_var( 'subpage' );
+		if ( ! empty( $subpage ) ) {
+			wp_redirect( get_author_posts_url( $wp_query->queried_object->ID ), 301 );
 			exit;
 		}
 
